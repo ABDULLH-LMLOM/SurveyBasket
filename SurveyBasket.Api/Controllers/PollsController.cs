@@ -1,7 +1,4 @@
-﻿
-using SurveyBasket.Api.Services;
-
-namespace SurveyBasket.Api.Controllers;
+﻿namespace SurveyBasket.Api.Controllers;
 
 [Route("api/[controller]")]
 [ApiController]

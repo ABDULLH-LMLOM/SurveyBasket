@@ -7,7 +7,6 @@ public class PollService : IPollService
         new Poll { Id = 1, Name = "Poll 1", description = "Description for Poll 1" },
         new Poll { Id = 2, Name = "Poll 2", description = "Description for Poll 2" },
         new Poll { Id = 3, Name = "Poll 3", description = "Description for Poll 3" },
-
     };
 
     public List<Poll> GetAll()
@@ -47,6 +46,5 @@ public class PollService : IPollService
 
         _polls.Remove(poll);
         return true;
-
     }
 }
