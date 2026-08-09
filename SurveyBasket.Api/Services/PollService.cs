@@ -25,9 +25,9 @@ public class PollService : IPollService
         return poll;
     }
 
-    public bool Update(Poll poll)
+    public bool Update(int id , Poll poll)
     {
-        var updatePoll = GetBy(poll.Id);
+        var updatePoll = GetBy(id);
 
         if (updatePoll is null)
             return false;

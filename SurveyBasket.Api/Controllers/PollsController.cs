@@ -1,44 +1,41 @@
-﻿using SurveyBasket.Api.Mapping;
-using SurveyBasket.Api.Contracts.Requests;
-namespace SurveyBasket.Api.Controllers;
+﻿namespace SurveyBasket.Api.Controllers;
 
 [Route("api/[controller]")]
 [ApiController]
-public class PollsController : ControllerBase
+public class PollsController (IPollService pollService) : ControllerBase
 {
-    private readonly IPollService _pollService;
+    private readonly IPollService _pollService = pollService;
 
-    public PollsController(IPollService pollService)
-    {
-        _pollService = pollService;
-    }
+
 
     [HttpGet]
     public IActionResult GetAll()
     {
         var polls = _pollService.GetAll();
-        return Ok(polls.ToResponse());
+        return Ok(polls.Adapt<List<PollResponse>>());
     }
 
     [HttpGet("{id}")]
-    public IActionResult GetById(int id)
+    public IActionResult GetById( int id)
     {
         var poll =_pollService.GetBy(id);
 
-        return poll is null ? NotFound() : Ok(poll.ToResponse());
+
+        return poll is null ? NotFound() : Ok(poll.Adapt<PollResponse>());
     }
 
     [HttpPost("")]
     public IActionResult Add(PollRequest poll)
     {
-         var NewPoll = _pollService.Add(poll.ToModel());
-        return CreatedAtAction(nameof(GetById) , new { id = NewPoll.Id } , NewPoll.ToResponse());
+         var NewPoll = _pollService.Add(poll.Adapt<Poll>());
+
+        return CreatedAtAction(nameof(GetById) , new { id = NewPoll.Id } , NewPoll.Adapt<PollResponse>());
     }
 
     [HttpPut("{id}")]
-    public IActionResult Update(int id , PollRequest poll)
+    public IActionResult Update(int id, PollRequest poll)
     {
-        var IsUpdated = _pollService.Update(poll.ToModel());
+        var IsUpdated = _pollService.Update(id , poll.Adapt<Poll>());
         return IsUpdated ? NoContent() : NotFound();
     }
 
