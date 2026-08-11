@@ -45,5 +45,22 @@ public class PollsController (IPollService pollService) : ControllerBase
         var IsDeleted = _pollService.Delete(id);
         return IsDeleted ? NoContent() : NotFound();
     }
+    [HttpGet("Test")]
+    public IActionResult Test()
+    {
+        var student = new Student
+        {
+            Id = 1,
+            FirstName = "John",
+            MiddleName = "M.",
+            LastName = "Doe",
+            BirthOfDay = new DateTime(1999, 1, 1),
+            Department = null
+            //Department = new Department { Id = 2  , Name  = "Test" }
+        };
+
+        return Ok(student.Adapt<StudentResponse>());
+
+    }
 
 }
