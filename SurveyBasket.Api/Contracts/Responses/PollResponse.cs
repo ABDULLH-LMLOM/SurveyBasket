@@ -1,8 +1,10 @@
 ﻿namespace SurveyBasket.Api.Contracts.Responses;
 
-public class PollResponse
-{
-    public int Id { get; set; }
-    public string Name { get; set; } = string.Empty;
-    public string description { get; set; } = string.Empty;
-}
+public record PollResponse(
+    int Id,
+    string Title,
+    string Summary,
+    bool IsPublished,
+    DateOnly StartsAt,
+    DateOnly EndsAt
+);

@@ -1,7 +1,9 @@
 ﻿namespace SurveyBasket.Api.Contracts.Requests;
 
-public class PollRequest
-{
-    public string Name { get; set; } 
-    public string description { get; set; } 
-}
+public record PollRequest(
+    string Title,
+    string Summary,
+    bool IsPublished,
+    DateOnly StartsAt,
+    DateOnly EndsAt
+);

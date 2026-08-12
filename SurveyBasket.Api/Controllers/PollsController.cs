@@ -9,58 +9,42 @@ public class PollsController (IPollService pollService) : ControllerBase
 
 
     [HttpGet]
-    public IActionResult GetAll()
+    public async Task<IActionResult> GetAll(CancellationToken cancellationToken)
     {
-        var polls = _pollService.GetAll();
-        return Ok(polls.Adapt<List<PollResponse>>());
+        var polls =  await _pollService.GetAllAsync( cancellationToken);
+        return Ok(polls.Adapt<IEnumerable<PollResponse>>());
     }
 
     [HttpGet("{id}")]
-    public IActionResult GetById( int id)
+    public async Task<IActionResult> GetById( int id , CancellationToken cancellationToken)
     {
-        var poll =_pollService.GetBy(id);
+        var poll = await _pollService.GetByAsync(id ,  cancellationToken);
 
 
         return poll is null ? NotFound() : Ok(poll.Adapt<PollResponse>());
     }
 
     [HttpPost("")]
-    public IActionResult Add(PollRequest poll)
+    public async Task<IActionResult> Add(PollRequest poll , CancellationToken cancellationToken)
     {
-         var NewPoll = _pollService.Add(poll.Adapt<Poll>());
+         var NewPoll =  await _pollService.AddAsync(poll.Adapt<Poll>() ,  cancellationToken);
 
         return CreatedAtAction(nameof(GetById) , new { id = NewPoll.Id } , NewPoll.Adapt<PollResponse>());
     }
 
     [HttpPut("{id}")]
-    public IActionResult Update(int id, PollRequest poll)
+    public async Task<IActionResult> Update(int id, PollRequest poll , CancellationToken cancellationToken)
     {
-        var IsUpdated = _pollService.Update(id , poll.Adapt<Poll>());
+        var IsUpdated = await _pollService.UpdateAsync(id, poll.Adapt<Poll>() , cancellationToken);
         return IsUpdated ? NoContent() : NotFound();
     }
 
     [HttpDelete("{id}")]
-    public IActionResult Delete(int id)
+    public async Task<IActionResult> Delete(int id , CancellationToken cancellationToken)
     {
-        var IsDeleted = _pollService.Delete(id);
+        var IsDeleted = await _pollService.DeleteAsync(id , cancellationToken);
         return IsDeleted ? NoContent() : NotFound();
     }
-    [HttpGet("Test")]
-    public IActionResult Test()
-    {
-        var student = new Student
-        {
-            Id = 1,
-            FirstName = "John",
-            MiddleName = "M.",
-            LastName = "Doe",
-            BirthOfDay = new DateTime(1999, 1, 1),
-            Department = null
-            //Department = new Department { Id = 2  , Name  = "Test" }
-        };
 
-        return Ok(student.Adapt<StudentResponse>());
-
-    }
 
 }

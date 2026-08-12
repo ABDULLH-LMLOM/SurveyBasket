@@ -5,8 +5,24 @@ public class PollRequestValidator : AbstractValidator<PollRequest>
 {
     public PollRequestValidator()
     {
-        RuleFor(P => P.Name)
+        RuleFor(p => p.Title)
             .NotEmpty()
-            .WithMessage("Name is required Gays.");
+            .MaximumLength(100);
+
+        RuleFor(p => p.Summary)
+            .NotEmpty()
+            .MaximumLength(1500);
+
+
+        RuleFor(p => p.StartsAt)
+            .NotEmpty()
+            .GreaterThanOrEqualTo(DateOnly.FromDateTime(DateTime.Today));
+
+        RuleFor(p => p.EndsAt)
+            .NotEmpty();
+
+        RuleFor(p => p)
+            .Must(p => p.EndsAt >= p.StartsAt);
+            
     }
 }

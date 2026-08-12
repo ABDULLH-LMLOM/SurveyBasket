@@ -2,22 +2,25 @@
 
 public static class DependencyInjection
 {
-    public static IServiceCollection AddDependencies(this IServiceCollection Services)
+    public static void AddDependencies(this IServiceCollection Services, IConfiguration Configuration)
     {
         Services.AddControllers();
 
-        Services.AddOpenApiService();
+        Services.AddOpenApi();
+
 
         Services.AddScoped<IPollService, PollService>();
 
-        Services.AddFluentValidationService();
+        Services.AddFluentValidation();
 
-        Services.AddMapsterService();
+        Services.AddMapster();
 
-        return Services;
+        Services.AddDbContext(Configuration);
+
+        //return Services;
     }
 
-    public static IServiceCollection AddOpenApiService(this IServiceCollection Services)
+    public static void AddOpenApi(this IServiceCollection Services)
     {
         Services.AddOpenApi(options =>
         {
@@ -33,22 +36,32 @@ public static class DependencyInjection
                 return Task.CompletedTask;
             });
         });
-        return Services;
+        //return Services;
     }
 
-    public static IServiceCollection AddFluentValidationService(this IServiceCollection Services)
+    public static void AddFluentValidation(this IServiceCollection Services)
     {
         Services
             .AddFluentValidationAutoValidation()
             .AddValidatorsFromAssembly(Assembly.GetExecutingAssembly());
-        return Services;
+        //return Services;
     }
 
-    public static IServiceCollection AddMapsterService(this IServiceCollection Services)
+  
+    public static void AddMapster(this IServiceCollection Services)
     {
         var mappingConfig = TypeAdapterConfig.GlobalSettings;
         mappingConfig.Scan(Assembly.GetExecutingAssembly());
         Services.AddSingleton<IMapper>(new Mapper(mappingConfig));
-        return Services;
+        //return Services;
+    }
+
+
+    public static void AddDbContext(this IServiceCollection Services, IConfiguration Configuration)
+    {
+        var connectionString = Configuration.GetConnectionString("DefaultConnection");
+        Services.AddDbContext<AppDbContext>(options =>
+            options.UseSqlServer(connectionString));
+        //return Services;
     }
 }
