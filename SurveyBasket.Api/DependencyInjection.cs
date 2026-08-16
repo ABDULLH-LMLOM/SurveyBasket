@@ -1,26 +1,27 @@
-﻿namespace SurveyBasket.Api;
+﻿using Microsoft.AspNetCore.Identity;
+
+namespace SurveyBasket.Api;
 
 public static class DependencyInjection
 {
-    public static void AddDependencies(this IServiceCollection Services, IConfiguration Configuration)
-    {
-        Services.AddControllers();
+    //public static void AddDependencies(this IServiceCollection Services, IConfiguration Configuration)
+    //{
+    //    Services.AddControllers();
 
-        Services.AddOpenApi();
+    //    Services.AddOpenApi();
 
 
-        Services.AddScoped<IPollService, PollService>();
+    //    Services.AddScoped<IPollService, PollService>();
 
-        Services.AddFluentValidation();
+    //    Services.AddFluentValidation();
 
-        Services.AddMapster();
+    //    Services.AddMapster();
 
-        Services.AddDbContext(Configuration);
+    //    Services.AddDbContext(Configuration);
 
-        //return Services;
-    }
+    //}
 
-    public static void AddOpenApi(this IServiceCollection Services)
+    public static void AddOpenApiService(this IServiceCollection Services)
     {
         Services.AddOpenApi(options =>
         {
@@ -36,32 +37,34 @@ public static class DependencyInjection
                 return Task.CompletedTask;
             });
         });
-        //return Services;
     }
 
-    public static void AddFluentValidation(this IServiceCollection Services)
+    public static void AddFluentValidationService(this IServiceCollection Services)
     {
         Services
             .AddFluentValidationAutoValidation()
             .AddValidatorsFromAssembly(Assembly.GetExecutingAssembly());
-        //return Services;
     }
 
   
-    public static void AddMapster(this IServiceCollection Services)
+    public static void AddMapsterService(this IServiceCollection Services)
     {
         var mappingConfig = TypeAdapterConfig.GlobalSettings;
         mappingConfig.Scan(Assembly.GetExecutingAssembly());
         Services.AddSingleton<IMapper>(new Mapper(mappingConfig));
-        //return Services;
     }
 
 
-    public static void AddDbContext(this IServiceCollection Services, IConfiguration Configuration)
+    public static void AddDbContextService(this IServiceCollection Services, IConfiguration Configuration)
     {
         var connectionString = Configuration.GetConnectionString("DefaultConnection");
         Services.AddDbContext<AppDbContext>(options =>
             options.UseSqlServer(connectionString));
-        //return Services;
+    }
+
+    public static void AddAuthService(this IServiceCollection Services)
+    {
+        Services.AddIdentity<User, IdentityRole>()
+              .AddEntityFrameworkStores<AppDbContext>();
     }
 }

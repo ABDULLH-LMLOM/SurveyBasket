@@ -1,5 +1,4 @@
-﻿
-namespace SurveyBasket.Api.Contracts.Validation;
+﻿namespace SurveyBasket.Api.Contracts.Poll;
 
 public class PollRequestValidator : AbstractValidator<PollRequest>
 {
