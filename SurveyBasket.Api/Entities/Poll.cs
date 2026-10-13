@@ -10,4 +10,9 @@ public class Poll
 
     public DateOnly StartsAt { get; set; }
     public DateOnly EndsAt { get; set; }
+
+    public override string ToString()
+    {
+        return $"{Id} \n {Title} \n {Summary} \n ----------------------------";
+    }
 }

@@ -10,7 +10,7 @@ builder.Services.AddFluentValidationService();
 
 builder.Services.AddMapsterService();
 
-builder.Services.AddAuthService();
+builder.Services.AddAuthService(builder.Configuration);
 
 builder.Services.AddDbContextService(builder.Configuration);
 
@@ -19,7 +19,7 @@ builder.Services.AddDbContextService(builder.Configuration);
 
 
 builder.Services.AddScoped<IPollService, PollService>();
-builder.Services.AddScoped<IAuthService, AuthService>();
+
 
 
 var app = builder.Build();

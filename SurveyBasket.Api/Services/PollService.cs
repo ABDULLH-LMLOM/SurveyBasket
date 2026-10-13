@@ -5,7 +5,7 @@ public class PollService(AppDbContext Context) : IPollService
     private readonly AppDbContext _Context = Context;
     public async Task<IEnumerable<Poll>> GetAllAsync(CancellationToken cancellationToken = default)
     {
-        return await _Context.Polls.AsNoTracking().ToListAsync(cancellationToken);
+        return await _Context.Polls.ToListAsync(cancellationToken);
     }
 
     public async Task<Poll?> GetByAsync(int id, CancellationToken cancellationToken = default)
@@ -41,7 +41,7 @@ public class PollService(AppDbContext Context) : IPollService
         if (poll is null)
             return false;
 
-         _Context.Polls.Remove(poll);
+        _Context.Polls.Remove(poll);
         await _Context.SaveChangesAsync(cancellationToken);
         return true;
     }

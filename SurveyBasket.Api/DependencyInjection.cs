@@ -1,4 +1,7 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.Extensions.Options;
 
 namespace SurveyBasket.Api;
 
@@ -46,7 +49,7 @@ public static class DependencyInjection
             .AddValidatorsFromAssembly(Assembly.GetExecutingAssembly());
     }
 
-  
+
     public static void AddMapsterService(this IServiceCollection Services)
     {
         var mappingConfig = TypeAdapterConfig.GlobalSettings;
@@ -62,9 +65,45 @@ public static class DependencyInjection
             options.UseSqlServer(connectionString));
     }
 
-    public static void AddAuthService(this IServiceCollection Services)
+    public static void AddAuthService(this IServiceCollection Services , IConfiguration configuration)
     {
+        Services.AddScoped<IAuthService, AuthService>();
+
+        Services.AddSingleton<JwtProvider>();
+
         Services.AddIdentity<User, IdentityRole>()
               .AddEntityFrameworkStores<AppDbContext>();
+
+        
+
+        var options = configuration.GetSection(JwtOptions.SectionName).Get<JwtOptions>();
+
+        Services.AddOptions<JwtOptions>()
+            .Bind(configuration.GetSection(JwtOptions.SectionName))
+            .ValidateDataAnnotations()
+            .ValidateOnStart();
+
+
+        Services.AddAuthentication(options =>
+        {
+            options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+            options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+        })
+            .AddJwtBearer(o =>
+            {
+                o.SaveToken = true;
+                o.TokenValidationParameters = new TokenValidationParameters()
+                {
+                    ValidateIssuer = true,
+                    ValidateAudience = true,
+                    ValidateLifetime = false,
+                    ValidateIssuerSigningKey = true,
+                    ValidIssuer = options.Issuer,
+                    ValidAudience = options.Audience,
+                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(options.Key!))
+                };
+            });
+
+
     }
 }

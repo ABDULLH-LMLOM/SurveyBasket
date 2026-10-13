@@ -1,5 +1,6 @@
 ﻿{
   "$schema": "https://json.schemastore.org/launchsettings.json",
+  
   "profiles": {
     "http": {
       "commandName": "Project",
@@ -8,9 +9,11 @@
       "launchUrl": "swagger/index.html",
       "applicationUrl": "http://localhost:5143",
       "environmentVariables": {
-        "ASPNETCORE_ENVIRONMENT": "Development"
+        "ASPNETCORE_ENVIRONMENT": "Development",
+        "key": "this value from launchSettings.json"
       }
     },
+
     "https": {
       "commandName": "Project",
       "dotnetRunMessages": true,
